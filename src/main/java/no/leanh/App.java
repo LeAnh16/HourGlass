@@ -15,7 +15,7 @@ public class App {
             Connection c = dbc.getConnection();
             System.out.println("Connected to database.");
             System.out.println("Creating database schema");
-            DBInit dbi = new DBInit(dbc.getConnection());
+            DBInit dbi = new DBInit(dbc);
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Failed to connect to database.");

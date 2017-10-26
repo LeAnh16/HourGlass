@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DBConn {
-    private Connection con;|
+    private Connection con;
     public DBConn() throws SQLException{
         MysqlDataSource ds = new MysqlDataSource();
         ds.setServerName(Properties.properties.getProperty("server"));
