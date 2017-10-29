@@ -27,6 +27,13 @@
   </properties>
 
   <dependencies>
+    <!-- https://mvnrepository.com/artifact/com.jakewharton.fliptables/fliptables -->
+    <dependency>
+      <groupId>com.jakewharton.fliptables</groupId>
+      <artifactId>fliptables</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+
     <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
     <dependency>
       <groupId>mysql</groupId>

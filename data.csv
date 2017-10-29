@@ -1,0 +1,107 @@
+lecturer:
+Per Lauvås,Per.lauv@itslearning.com
+Tomas Sandnes,tom.sand@itslearning.com
+Even Gabrielsen,Eve.gab@itslearning.com
+Singh Varjit,Singhaling@itslearning.com
+Elon Musk,Elon.m@itslearning.com
+Mark Zuckerberg,mark.zuck@itslearning.com
+Nobunaga Oda,Noba.oda@itslearning.com
+Bruce Lee,Bru.Lee@itslearning.com
+--
+subject:
+Artificial intelligence,AI1337,55,2017-08-14,2017-11-12
+avansert java,PR2200,80,2017-08-15,2017-12-01
+prosjektutvikling,PU1890,110,2017-08-16,2017-12-12
+grensesnittsdesign,GR0182,19,2017-08-17,2017-12-08
+Markedsføring og e-business,EB1101,60,2017-08-14,2017-12-10
+designpraksis,DE1135,75,2017-08-16,2017-12-10
+Bedriftsmanagement,BM3280,68,2017-08-17,2017-12-24
+--
+class:
+programmering,H2015,Teknologi
+programmering,H2016,Teknologi
+programmering,H2017,Teknologi
+mobilprogrammering,h2015,teknologi
+mobilprogrammering,h2016,teknologi
+frontend- og mobilutvikling,h2017,teknologi
+design- og håndverk,h2015,kommunikasjon
+--
+room:
+V101,80
+V202,50
+V203,50
+V204,50
+V205,40
+V206,40
+V207,40
+V208,40
+V302,50
+V303,50
+V304,50
+V305,40
+V306,40
+V307,40
+V308,40
+F101,255
+F202,60
+F203,60
+F204,60
+F205,60
+F206,100
+F207,100
+F208,100
+F209,100
+F210,100
+F302,60
+F303,60
+F304,60
+F305,60
+F306,100
+F307,100
+F308,100
+f309,100
+f310,100
+--
+subject_Lecturer:
+1,1
+1,2
+2,3
+2,4
+3,5
+5,6
+6,7
+7,8
+--
+class_Subject:
+1,1
+1,2
+1,3
+1,4
+1,6
+1,7
+2,1
+2,2
+2,3
+2,4
+3,1
+3,2
+3,3
+3,4
+3,5
+3,6
+3,7
+4,1
+4,2
+4,3
+4,4
+4,5
+4,6
+4,7
+5,6
+5,7
+6,5
+6,6
+6,7
+7,5
+7,7
+--
