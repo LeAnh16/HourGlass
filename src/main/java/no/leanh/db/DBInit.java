@@ -1,10 +1,12 @@
 package no.leanh.db;
 
-import javax.xml.transform.Result;
+import no.leanh.Prop;
+
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Properties;
 
 public class DBInit {
     private ArrayList<String> lecturers = new ArrayList<>();
@@ -92,10 +94,23 @@ public class DBInit {
         dbh = new DBHandler();
         dbh.insertTableFromList(classesToSubjects, "Class_Subject");
         System.out.println("Database populated with data from file.");
+
+        try {
+            OutputStream out = new FileOutputStream("config.properties");
+            Properties prop = Prop.getProperties();
+            Prop.properties.setProperty("dbinitialized", "true");
+            prop.store(out, "Some config comments...");
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
-    public boolean checkIfDBPopulated() {
-        try (Connection conn = new ConnProvider().getConnection();
+    public boolean checkIfDBNotPopulated() {
+        return (Prop.properties.getProperty("dbinitialized", "false").equals("false"));
+
+        /*(Connection conn = new ConnProvider().getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery("(SELECT * FROM  Subject LIMIT 1)\n" +
                      "UNION (SELECT * FROM  Class LIMIT 1)\n" +
@@ -104,10 +119,6 @@ public class DBInit {
                      "UNION (SELECT * FROM  Subject_Lecturer LIMIT 1)\n" +
                      "UNION (SELECT * FROM  Class_Subject LIMIT 1);")){
         rs.last();
-        return (rs.getRow() >= 6);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return (rs.getRow() >= 6)*/
     }
 }

@@ -56,47 +56,59 @@ public class DBHandler {
         }
     }
 
-    public void read(String table) {
-        try (Connection conn = d.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM " + table)) {
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int columnsNumber = rsmd.getColumnCount();
-            StringBuilder strb = new StringBuilder();
-            int highest = 0;
+    public ResultSet read(String table) throws SQLException {
+        Connection conn = d.getConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM " + table);
+        return rs;
 
-            for (int j = 1; j <= columnsNumber; j++) {
-                if (highest < rsmd.getColumnName(j).length()) highest = rsmd.getColumnName(j).length();
-                while (rs.next()) {
-                    if (highest < rs.getString(j).length()) highest = rs.getString(j).length();
-                }
-                strb.append("| %-");
-                strb.append(highest);
-                strb.append("s ");
-                highest = 0;
-                rs.first();
-            }
-            String result = strb.toString();
-            String leftAlignFormat = result + "|%n";
-            List<Object> colNameList = new ArrayList<>();
+    }
 
-            for (int i = 1; i <= columnsNumber; i++) {
-                colNameList.add(rsmd.getColumnName(i));
-            }
-            System.out.format(leftAlignFormat, colNameList.toArray());
+    public ResultSet read(String table, String column, String row)throws SQLException {
+        Connection conn = d.getConnection();
+        Statement stmt = conn.createStatement();
 
+        ResultSet rs = stmt.executeQuery("SELECT * FROM " + table + " WHERE " + column + " = '" + row + "';");
+        return rs;
+
+
+
+    }
+
+    public void printTable(ResultSet rs) throws SQLException {
+        ResultSetMetaData rsmd = rs.getMetaData();
+        StringBuilder strb = new StringBuilder();
+        int highest = 0;
+
+        for (int j = 1; j <= rsmd.getColumnCount(); j++) {
+            if (highest < rsmd.getColumnName(j).length()) highest = rsmd.getColumnName(j).length();
             while (rs.next()) {
-                List<Object> contentList = new ArrayList<>();
-                for (int i = 1; i <= columnsNumber; i++) {
-                    contentList.add(rs.getString(i));
+                if (highest < rs.getString(j).length()){
+                    highest = rs.getString(j).length();
                 }
-                System.out.format(leftAlignFormat, contentList.toArray());
             }
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            strb.append("| %-");
+            strb.append(highest);
+            strb.append("s ");
+            highest = 0;
+            rs.beforeFirst();
         }
+        String result = strb.toString();
+        String leftAlignFormat = result + "|%n";
+        List<Object> colNameList = new ArrayList<>();
+
+        for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+            colNameList.add(rsmd.getColumnName(i));
+        }
+        System.out.format(leftAlignFormat, colNameList.toArray());
+        while (rs.next()) {
+            List<Object> contentList = new ArrayList<>();
+            for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                contentList.add(rs.getString(i));
+            }
+            System.out.format(leftAlignFormat, contentList.toArray());
+        }
+
     }
 }
 

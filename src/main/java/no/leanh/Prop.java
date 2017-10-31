@@ -3,10 +3,15 @@ package no.leanh;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 
-public class Properties {
+public class Prop {
     public static java.util.Properties properties;
-    public Properties(){ init(); }
+    public Prop(){ init(); }
+
+    public static Properties getProperties() {
+        return properties;
+    }
 
     private void init(){
         properties = new java.util.Properties();
@@ -17,7 +22,7 @@ public class Properties {
 
             // load a properties file
             properties.load(input);
-            System.out.println("Properties loaded");
+            System.out.println("Prop loaded");
 
         } catch (IOException ex) {
             ex.printStackTrace();
