@@ -21,7 +21,7 @@ public class App {
             DBHandler dbh = new DBHandler();
             System.out.println("please enter the name of the table you wish to read from.");
             dbh.read(sc.next());
-            System.out.println("Showed");
+            System.out.println("Showed data from table");
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Failed to connect to database.");
