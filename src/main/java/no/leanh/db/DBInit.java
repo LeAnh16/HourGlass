@@ -1,23 +1,16 @@
 package no.leanh.db;
 
-import no.leanh.Prop;
+import no.leanh.file.Prop;
 
 import java.io.*;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Properties;
+import java.util.*;
 
 public class DBInit {
-    private ArrayList<String> lecturers = new ArrayList<>();
-    private ArrayList<String> classes = new ArrayList<>();
-    private ArrayList<String> rooms = new ArrayList<>();
-    private ArrayList<String> subjects = new ArrayList<>();
-    private ArrayList<String> subjectsToLecturers = new ArrayList<>();
-    private ArrayList<String> classesToSubjects = new ArrayList<>();
-    private ArrayList<String> titles = new ArrayList<>(Arrays.asList("subject:", "class:", "room:", "lecturer:", "subject_Lecturer:", "class_Subject:"));
-
+    private Properties prop;
     public DBInit() throws SQLException {
+        Prop p = new Prop();
+        prop = p.getProperties();
 
     }
 
@@ -29,86 +22,46 @@ public class DBInit {
             while ((l = reader.readLine()) != null) {
                 stmt.execute(l);
             }
-
-            System.out.println("Database created.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public void parseCSV() throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(new File("data.csv")));
-        String l;
-        int s = 0;
-        while ((l = reader.readLine()) != null) {
-            boolean broken = false;
-            for (String i : titles) {
-                if (l.equals(i)) {
-                    s++;
-                    broken = true;
-                    break;
-                }
-            }
-            if (l.equals("--") || broken) {
-                continue;
-            }
-            switch (s) {
-                case 1:
-                    lecturers.add(l);
-                    break;
-                case 2:
-                    subjects.add(l);
-                    break;
-                case 3:
-                    classes.add(l);
-                    break;
-                case 4:
-                    rooms.add(l);
-                    break;
-                case 5:
-                    subjectsToLecturers.add(l);
-                    break;
-                case 6:
-                    classesToSubjects.add(l);
-            }
-        }
-        System.out.println("Data from CSV added to lists.");
-    }
-
-    public void populate() throws SQLException {
-        DBHandler dbh = new DBHandler();
-        dbh.insertTableFromList(lecturers, "Lecturer");
-        dbh = new DBHandler();
-        dbh.insertTableFromList(classes, "Class");
-        dbh = new DBHandler();
-        dbh.insertTableFromList(rooms, "Room");
-        dbh = new DBHandler();
-        dbh.insertTableFromList(subjects, "Subject");
-        dbh = new DBHandler();
-        dbh.insertTableFromList(subjectsToLecturers, "Subject_Lecturer");
-        dbh = new DBHandler();
-        dbh.insertTableFromList(classesToSubjects, "Class_Subject");
-        System.out.println("Database populated with data from file.");
-
-        try {
-            OutputStream out = new FileOutputStream("config.properties");
-            Properties prop = Prop.getProperties();
-            Prop.properties.setProperty("dbinitialized", "true");
+            OutputStream out = new FileOutputStream("DBconfig.properties");
+            prop.setProperty("db-initialized", "true");
             prop.store(out, "Some config comments...");
             out.close();
-        } catch (IOException e) {
+            System.out.println("Database created.");
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
+
         }
+
 
     }
 
+
+
+    public void populate(Map<String, List<String>> map) throws SQLException {
+       try(Connection conn = new ConnProvider().getConnection()) {
+           DBHandler dbh = new DBHandler(conn);
+           dbh.insertTableFromList(map.get("lecturers"), "Lecturer");
+           dbh.insertTableFromList(map.get("classes"), "Class");
+           dbh.insertTableFromList(map.get("rooms"), "Room");
+           dbh.insertTableFromList(map.get("subjects"), "Subject");
+           dbh.insertTableFromList(map.get("subjectToLecturers"), "Subject_Lecturer");
+           dbh.insertTableFromList(map.get("classToSubjects"), "Class_Subject");
+           System.out.println("Database populated with data from file.");
+           OutputStream out = new FileOutputStream("DBconfig.properties");
+           prop.setProperty("db-populated", "true");
+           prop.store(out, "Some config comments...");
+           out.close();
+       }
+       catch(SQLException | IOException e){
+           e.printStackTrace();
+        }
+
+    }
+    public boolean checkIfDBNotInitialized(){
+        return (prop.getProperty("db-initialized", "false").equals("false"));
+    }
     public boolean checkIfDBNotPopulated() {
-        return (Prop.properties.getProperty("dbinitialized", "false").equals("false"));
+        return (prop.getProperty("db-populated", "false").equals("false"));
 
         /*(Connection conn = new ConnProvider().getConnection();
              Statement stmt = conn.createStatement();

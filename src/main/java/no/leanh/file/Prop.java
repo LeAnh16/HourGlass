@@ -1,4 +1,4 @@
-package no.leanh;
+package no.leanh.file;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -6,22 +6,31 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class Prop {
-    public static java.util.Properties properties;
+    public  java.util.Properties properties;
+    public  java.util.Properties serverProperties;
     public Prop(){ init(); }
 
-    public static Properties getProperties() {
+    public  Properties getProperties() {
         return properties;
+    }
+    public  Properties getServerProperties()
+    {
+        return serverProperties;
     }
 
     private void init(){
         properties = new java.util.Properties();
+        serverProperties = new java.util.Properties();
         InputStream input = null;
 
         try {
-            input = new FileInputStream("config.properties");
+            input = new FileInputStream("DBconfig.properties");
 
             // load a properties file
             properties.load(input);
+
+            input = new FileInputStream("ServerProperties");
+            serverProperties.load(input);
             System.out.println("Prop loaded");
 
         } catch (IOException ex) {

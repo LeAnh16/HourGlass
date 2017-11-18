@@ -3,71 +3,68 @@ package no.leanh.db;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 
 public class DBHandler {
-    private ConnProvider d;
 
-    public DBHandler() throws SQLException {
-        this.d = new ConnProvider();
+    private Connection conn;
+
+    public DBHandler(Connection conn)
+    {
+        this.conn = conn;
 
     }
 
-    public void insertTableFromList(ArrayList<String> list, String table) {
-        try (Connection conn = d.getConnection();
-             Statement stmt = conn.createStatement()) {
-            for (String i : list) {
-                String sql = "INSERT INTO " + table;
-                String[] split = i.split(",");
-                switch (table) {
-                    case "Lecturer":
-                        sql = "INSERT INTO " + table +
-                                " (Name, Email) VALUES ('" + split[0] + "','" + split[1] + "');";
-                        break;
-                    case "Subject":
-                        sql = "INSERT INTO " + table +
-                                " (Name, Subject_code, Enrolled_Students, Start_Date, End_Date) VALUES ('"
-                                + split[0] + "', '" + split[1] + "', '" + split[2] + "', '" + split[3] + "', '" + split[4] + "');";
-                        break;
-                    case "Class":
-                        sql = "INSERT INTO " + table +
-                                " (Name, Grade, Department) VALUES ('" + split[0] + "', '" + split[1] + "', '" +
-                                split[2] + "');";
-                        break;
-                    case "Room":
-                        sql = "INSERT INTO " + table +
-                                " (Room_Nr, Total_Seats) VALUES ('" + split[0] + "', '" + split[1] + "');";
-                        break;
-                    case "Subject_Lecturer":
-                        sql = "INSERT IGNORE INTO " + table +
-                                " (Subject_ID, Lecturer_ID) VALUES ('" + split[0] + "', '" + split[1] + "');";
-                        break;
-                    case "Class_Subject":
-                        sql = "INSERT IGNORE INTO " + table +
-                                " (Subject_ID, Class_ID) VALUES ('" + split[0] + "', '" + split[1] + "');";
-                        break;
-                }
-                stmt.execute(sql);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public DBHandler() {
 
+    }
+
+    public void insertTableFromList(List<String> list, String table) throws SQLException {
+        Statement stmt = conn.createStatement();
+        for (String i : list) {
+            String sql = "INSERT INTO " + table;
+            String[] split = i.split(",");
+            switch (table) {
+                case "Lecturer":
+                    sql = "INSERT INTO " + table +
+                            " (Name, Email) VALUES ('" + split[0] + "','" + split[1] + "');";
+                    break;
+                case "Subject":
+                    sql = "INSERT INTO " + table +
+                            " (Name, Subject_code, Enrolled_Students, Start_Date, End_Date) VALUES ('"
+                            + split[0] + "', '" + split[1] + "', '" + split[2] + "', '" + split[3] + "', '" + split[4] + "');";
+                    break;
+                case "Class":
+                    sql = "INSERT INTO " + table +
+                            " (Name, Grade, Department) VALUES ('" + split[0] + "', '" + split[1] + "', '" +
+                            split[2] + "');";
+                    break;
+                case "Room":
+                    sql = "INSERT INTO " + table +
+                            " (Room_Nr, Total_Seats) VALUES ('" + split[0] + "', '" + split[1] + "');";
+                    break;
+                case "Subject_Lecturer":
+                    sql = "INSERT IGNORE INTO " + table +
+                            " (Subject_ID, Lecturer_ID) VALUES ('" + split[0] + "', '" + split[1] + "');";
+                    break;
+                case "Class_Subject":
+                    sql = "INSERT IGNORE INTO " + table +
+                            " (Subject_ID, Class_ID) VALUES ('" + split[0] + "', '" + split[1] + "');";
+                    break;
+            }
+            stmt.execute(sql);
         }
     }
 
     public ResultSet read(String table) throws SQLException {
-        Connection conn = d.getConnection();
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM " + table);
+        ResultSet rs = stmt.executeQuery("SELECT * FROM " + table +";");
         return rs;
 
     }
 
     public ResultSet read(String table, String column, String row)throws SQLException {
-        Connection conn = d.getConnection();
         Statement stmt = conn.createStatement();
-
         ResultSet rs = stmt.executeQuery("SELECT * FROM " + table + " WHERE " + column + " = '" + row + "';");
         return rs;
 
